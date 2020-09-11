@@ -26,7 +26,6 @@ class Player:
             pos = ((item.left//cols)+{True: 0, False: 1}
                    [side == 'H'], (item.top//rows)+{True: 0, False: 1}[side == 'V'])
             self.fences.append([pos, side])
-            print(self.fences)
         # f == false???
         return
 
