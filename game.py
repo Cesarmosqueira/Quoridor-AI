@@ -61,14 +61,14 @@ class Board:
 				x, y = f1[i][0]
 				d = f1[i][1]
 				l_w, l_h = {True: w*2, False: 10}[d == 'H'], {True: h*2, False: 10}[d == 'V']
-				if d == 'H': pg.draw.rect(screen, Cblack, (x*w, y*h - 5, l_w, l_h))
-				if d == 'V': pg.draw.rect(screen, Cblack, (x*w - 5, y*h, l_w, l_h))
+				if d == 'H': pg.draw.rect(screen, Cpawn1, (x*w, y*h - 5, l_w, l_h))
+				if d == 'V': pg.draw.rect(screen, Cpawn2, (x*w - 5, y*h, l_w, l_h))
 			if i < len(f2):  # p2
 				x, y = f2[i][0]
 				d = f2[i][1]
 				l_w, l_h = {True: w*2, False: 10}[d == 'H'], {True: h*2, False: 10}[d == 'V']
-				if d == 'H': pg.draw.rect(screen, Cblack, (x*w, y*h - 5, l_w, l_h))
-				if d == 'V': pg.draw.rect(screen, Cblack, (x*w - 5, y*h, l_w, l_h))
+				if d == 'H': pg.draw.rect(screen, Cpawn1, (x*w, y*h - 5, l_w, l_h))
+				if d == 'V': pg.draw.rect(screen, Cpawn2, (x*w - 5, y*h, l_w, l_h))
 
 	def draw_board(self, screen, w, h, p):
 		# rectangles
