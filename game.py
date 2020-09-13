@@ -1,6 +1,5 @@
 from players import *
 import random as rnd
-
 class Board:
 	def __init__(self, rows, cols, screen):
 		self.rows = rows
@@ -14,7 +13,22 @@ class Board:
 		self.mouse_fence = pg.Rect(0, 0, 0, 0)
 		self.placing_fence = False
 		self.turn = {True:-1,False:1}[rnd.randint(0,1) == 0]		
-
+		self.backend = []
+		for i in range(0,rows*2+1):
+			self.backend.append([{True:'.', False:'o'} [i%2==0 or x%2==0] for x in range(cols*2+1)])
+			print(self.backend[i])
+		input()
+	def update_backend(self):
+		self.backend[self.p1.x][self.p1.y] == '1'	
+		self.backend[self.p2.x][self.p2.y] == '2'	
+		fences = self.p1.fences + self.p2.fences
+		for i in fences:
+			for padd in range(0,2):
+				if i[1] == 'V': self.backend[int(i[0][0])*2+padd][int(i[0][0])*2] = '#'
+				if i[1] == 'H':	self.backend[int(i[0][0])*2][int(i[0][0])*2+padd] = '#'
+		print('New')
+		for i in self.backend:
+			print(i)	
 	def mouse_shadow(self, screen, pos):
 		col, row = pos[0]//self.w, pos[1]//self.h
 		p = 10
@@ -48,12 +62,13 @@ class Board:
 				self.p1.place_item(self.mouse_fence, True, self.h, self.w)
 			if self.turn == -1:
 				self.p2.place_item(self.mouse_fence, True, self.h, self.w)
+			self.turn *= -1
 		else:
 			p = pos[0]//self.w, pos[1]//self.h
-			if self.turn == 1 and p in self.p1.get_adyacents(): self.p1.move_to(p)
-			if self.turn == -1 and p in self.p2.get_adyacents(): self.p2.move_to(p)
-			
-		self.turn *= -1
+			if self.turn == 1 and p in self.p1.get_adyacents(): self.p1.move_to(p,self.p2.fences)
+			if self.turn == -1 and p in self.p2.get_adyacents(): self.p2.move_to(p,self.p1.fences)
+			self.turn *= -1	
+		self.update_backend()	
 
 	def update_players(self, screen, w, h):
 		# draw pawns

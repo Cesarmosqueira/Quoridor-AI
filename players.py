@@ -29,7 +29,9 @@ class Player:
 			self.fences.append([pos, side])
 		# f == false???
 		return
-	def move_to(self, pos):
+	def move_to(self, pos, fences): 
+		f = fences + self.fences
+		print(f)
 		self.x = pos[0]; self.y = pos[1]
 	def get_adyacents(self):
 		#### not diagonals
