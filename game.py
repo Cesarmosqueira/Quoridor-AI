@@ -20,8 +20,8 @@ class Board:
 		p = 10
 		self.mouse_rect = pg.Rect(col*self.w+p, row*self.h+p, self.w-p*2, self.h-p*2)
 		hitbox = pg.Rect(pos[0], pos[1], 1, 1)
-
-		if self.mouse_rect.contains(hitbox) and (col, row) != self.p1.get_col_row() and (col, row) != self.p2.get_col_row():
+		arr = {True: self.p1.get_adyacents(), False: self.p2.get_adyacents()}[self.turn == 1]
+		if (col,row) in arr and self.mouse_rect.contains(hitbox) and (col, row) != self.p1.get_col_row() and (col, row) != self.p2.get_col_row():
 			pg.draw.rect(screen, {True:Cshadow2, False:Cshadow1}[self.turn==-1], self.mouse_rect)
 			self.placing_fence = False
 		else:
@@ -41,13 +41,18 @@ class Board:
 			self.placing_fence = True
 		return
 
-	def click(self):
+	def click(self, pos):
 		# turn
 		if self.placing_fence == True:
 			if self.turn == 1:
 				self.p1.place_item(self.mouse_fence, True, self.h, self.w)
 			if self.turn == -1:
 				self.p2.place_item(self.mouse_fence, True, self.h, self.w)
+		else:
+			p = pos[0]//self.w, pos[1]//self.h
+			if self.turn == 1 and p in self.p1.get_adyacents(): self.p1.move_to(p)
+			if self.turn == -1 and p in self.p2.get_adyacents(): self.p2.move_to(p)
+			
 		self.turn *= -1
 
 	def update_players(self, screen, w, h):
@@ -62,12 +67,12 @@ class Board:
 				d = f1[i][1]
 				l_w, l_h = {True: w*2, False: 10}[d == 'H'], {True: h*2, False: 10}[d == 'V']
 				if d == 'H': pg.draw.rect(screen, Cpawn1, (x*w, y*h - 5, l_w, l_h))
-				if d == 'V': pg.draw.rect(screen, Cpawn2, (x*w - 5, y*h, l_w, l_h))
+				if d == 'V': pg.draw.rect(screen, Cpawn1, (x*w - 5, y*h, l_w, l_h))
 			if i < len(f2):  # p2
 				x, y = f2[i][0]
 				d = f2[i][1]
 				l_w, l_h = {True: w*2, False: 10}[d == 'H'], {True: h*2, False: 10}[d == 'V']
-				if d == 'H': pg.draw.rect(screen, Cpawn1, (x*w, y*h - 5, l_w, l_h))
+				if d == 'H': pg.draw.rect(screen, Cpawn2, (x*w, y*h - 5, l_w, l_h))
 				if d == 'V': pg.draw.rect(screen, Cpawn2, (x*w - 5, y*h, l_w, l_h))
 
 	def draw_board(self, screen, w, h, p):

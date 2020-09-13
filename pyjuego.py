@@ -12,7 +12,7 @@ while not over:
         if event.type == pg.QUIT:
             over = True
         if event.type == pg.MOUSEBUTTONDOWN:
-            board.click()
+            board.click(pg.mouse.get_pos())
     turn = board.update_board(screen) ##main func
     board.mouse_shadow(screen, pg.mouse.get_pos())
     pg.display.update()
