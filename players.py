@@ -1,5 +1,12 @@
 import pygame as pg
 
+Cwhite = (255, 255, 255)
+Cbrown = (112, 72, 60)
+Cblack = (0, 0, 0)
+Cpawn1 = (3, 140, 252)
+Cpawn2 = (112, 181, 0)
+Cshadow1 = (148,192,209)
+Cshadow2 = (156,173,128)
 class Player:
     def __init__(self, side, cols, rows):
         self.x = cols//2
