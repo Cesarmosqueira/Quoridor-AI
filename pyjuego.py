@@ -5,7 +5,7 @@ W, H = 800, 800
 screen = pg.display.set_mode((W, H))
 pg.display.set_caption('game')
 over = False
-board = game.Board(10,10, screen)
+board = game.Board(9,9, screen)
 turn = board.turn
 
 while not over:

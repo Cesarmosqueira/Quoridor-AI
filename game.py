@@ -13,22 +13,17 @@ class Board:
 		self.mouse_fence = pg.Rect(0, 0, 0, 0)
 		self.placing_fence = False
 		self.turn = {True:-1,False:1}[rnd.randint(0,1) == 0]		
-		self.backend = []
-		for i in range(0,rows*2+1):
-			self.backend.append([{True:'.', False:'o'} [i%2==0 or x%2==0] for x in range(cols*2+1)])
-			print(self.backend[i])
-		input()
+		####matrix#####
+		self.backend = [[{True:'#', False:' '}[x==0 or x ==rows+1] for x in range(rows+2)]]*int(cols+2)
+		a = ['#']*(cols+2)
+		self.backend[0] = a; self.backend[-1] = a
+		
 	def update_backend(self):
-		self.backend[self.p1.x][self.p1.y] == '1'	
-		self.backend[self.p2.x][self.p2.y] == '2'	
-		fences = self.p1.fences + self.p2.fences
-		for i in fences:
-			for padd in range(0,2):
-				if i[1] == 'V': self.backend[int(i[0][0])*2+padd][int(i[0][0])*2] = '#'
-				if i[1] == 'H':	self.backend[int(i[0][0])*2][int(i[0][0])*2+padd] = '#'
-		print('New')
-		for i in self.backend:
-			print(i)	
+		print(self.backend[int(self.p1.y+1)][int(self.p1.x+1)])
+		self.backend[int(self.p1.y+1)][int(self.p1.x+1)] = '1'	
+		self.backend[int(self.p2.y+1)][int(self.p2.x+1)] = '2'	
+		for i in self.backend: print(i)	
+
 	def mouse_shadow(self, screen, pos):
 		col, row = pos[0]//self.w, pos[1]//self.h
 		p = 10
