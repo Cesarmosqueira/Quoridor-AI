@@ -1,5 +1,4 @@
 from random import getrandbits
-import numpy as np
 ### p1 = 'x' = 120 * 3 = 360
 ### p2 = 'o' = 111 * 3 = 333
  
