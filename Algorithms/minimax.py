@@ -89,7 +89,6 @@ def get_best_move(board): ### for O
                 s = minimax(board, True)
                 if s < best_score:
                     best_score = s
-                    print(best_score)
                     new_move = [i,j]                
                 board[i][j] = ' '
     return new_move
