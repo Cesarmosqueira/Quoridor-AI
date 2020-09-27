@@ -60,7 +60,7 @@ def minimax(board, maximizing): #### status (bool(continue/stop), int([-1,1]: W,
     if status[0] == False:
         return status[1] ## W/L/T case
     if maximizing:
-        best_score = -100
+        best_score = float('-inf')
         for i in range(3):
             for j in range(3):
                 if board[i][j] == ' ':
@@ -70,30 +70,29 @@ def minimax(board, maximizing): #### status (bool(continue/stop), int([-1,1]: W,
         return best_score
 
     else:
-        best_score = 100           
+        best_score = float('inf')           
         for i in range(3):
             for j in range(3):
                 if board[i][j] == ' ':
                     board[i][j] = 'O'
                     best_score = min(minimax(board, True), best_score)
                     board[i][j] = ' ' 
-
         return best_score
 
 def get_best_move(board): ### for O
-    best_score = 20
-    best_move = [-1,-1]
+    best_score = float('inf')
+    new_move = []
     for i in range(3):
         for j in range(3):
             if board[i][j] == ' ':
                 board[i][j] = 'O'
-                s = minimax(board, False)
+                s = minimax(board, True)
                 if s < best_score:
-                    print("asd")
                     best_score = s
-                    best_move = [i,j]                
+                    print(best_score)
+                    new_move = [i,j]                
                 board[i][j] = ' '
-    return best_move
+    return new_move
 
 
 board = [[' ',' ',' '],
@@ -107,14 +106,13 @@ turn = bool(getrandbits(1)) ### turn 1 ai turn -1 player
 
 while check_winner(board)[0]:
     print()
-    if turn == 1: 
+    if turn: 
         print("Player's turn:", end = " ")
         player = [int(x) for x in input().split()]
         if valid_move(board,player): board[player[0]][player[1]] = 'X'
         else: turn = not turn
-    elif turn == 0: 
+    else: 
         print("Ai's turn:", end = "\n")
-        #ai = [int(x) for x in input().split()]
         ai = get_best_move(board)
         if valid_move(board,ai): board[ai[0]][ai[1]] = 'O'
         else: turn = not turn
