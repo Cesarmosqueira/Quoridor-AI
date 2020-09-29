@@ -47,6 +47,7 @@ class Board:
 		self.backend[int(pos[0])][int(pos[1])] = '#'
 		print(self.backend[int(pos[0])][int(pos[1])+1])
 		return
+
 	def click(self, pos):
 		# turn
 		if self.placing_fence == True:
@@ -68,6 +69,7 @@ class Board:
 
 			if self.turn == -1:
 				if p in self.p2.get_adyacents(): 
+					
 					self.p2.move_to(p,self.p1.fences)
 					self.update_backend(self.turn, p)   
 				else:
