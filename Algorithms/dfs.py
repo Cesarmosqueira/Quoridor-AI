@@ -1,28 +1,35 @@
-h, w = [int(x) for x in input().split()]
-board = []
-for i in range(h):
-    board.append(list(input()))
-vis = [[False]*w]*w
-directions = [(1,0),(-1,0),(0,1),(0,-1)]
 
-def valid(r,c):
-    return 0 <= r and r < h and 0 <= c and c < w and board[r][c] != '#' \
-           and not vis[r][c]
+def solve():
+    # movimientos 
+    # mov 1: (dx[0], dy[0]) -> (x+1, y)
+    # mov 2: (dx[1], dy[0]) -> (x-1, y)
+    # ....
+    dx = [1,-1,0,0]
+    dy = [0,0,1,-1]
+    n, m = [int(x) for x in input().split()]
+    matriz = [[] for i in range(n)]
+    for i in range(n):
+        matriz[i] = list(input())
+    vis = [[False for i in range(m)] for j in range(n)]
+
+    def valid(row, col):
+        return (row >= 0) and (row < n) and (col >= 0) and (col < m) \
+            and (matriz[row][col] == '.') and (not vis[row][col])
+
+    def dfs(row, col):
+        vis[row][col] = True
+        for i in range(4):
+            nx = row + dx[i]
+            ny = col + dy[i]
+            if valid(nx, ny):
+                dfs(nx, ny)
     
-def dfs(r,c):
-    vis[r][c] = True
-    for d in directions:
-        nr, nc = r+d[0], c+d[1]
-        if valid(nr,nc):
-            dfs(nr,nc)
+    rooms = 0
+    for i in range(n):
+        for j in range(m):
+            if (matriz[i][j] == '.') and (not vis[i][j]):
+                rooms += 1
+                dfs(i, j)
+    return rooms
 
-
-c = 0
-for i in range(h):
-    for j in range(w):
-        if valid(i,j):
-            dfs(i,j)
-            c+=1
-
-if c > 1:
-    print("Invalid board")
+print(solve())
