@@ -14,9 +14,6 @@ while not over:
 			over = True
 		if event.type == pg.MOUSEBUTTONDOWN:
 			board.click(pg.mouse.get_pos())
-		if event.type == pg.KEYDOWN:
-			if event.key == pg.K_i:
-				for i in board.backend: print(i)
 	turn = board.update_board(screen) ##main func
 	board.mouse_shadow(screen, pg.mouse.get_pos())
 	pg.display.update()

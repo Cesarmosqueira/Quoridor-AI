@@ -31,7 +31,6 @@ class Player:
 		return
 	def move_to(self, pos, fences): 
 		f = fences + self.fences
-		print(f)
 		self.x = pos[0]; self.y = pos[1]
 	def get_adyacents(self):
 		#### not diagonals
