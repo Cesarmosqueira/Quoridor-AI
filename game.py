@@ -72,7 +72,8 @@ class Board:
 		self.draw_board(screen, w, h, p)
 		self.update_players(screen, w, h)
 		if win_condition(self.backend) != ' ':
-			print('HA GANADO ALGUIEN CSM')
+			print('HA GANADO ALGUIEN y es ', 'El verde' if win_condition(self.backend) == 'O' else 'El azul')
+			input()
 			quit()
 		return self.turn
 

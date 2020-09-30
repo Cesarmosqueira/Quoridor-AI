@@ -31,7 +31,6 @@ class Player:
 		# f == false???
 		return
 	def next_move(self, board):  ###BFSBFS
-		print("sending:", self.side, (self.y, self.x))
 		board[self.y+1][self.x+1] = ' '
 		self.y , self.x = get_next_move(board, self.side, (self.y+1, self.x+1))
 		return

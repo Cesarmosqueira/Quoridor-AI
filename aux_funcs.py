@@ -64,7 +64,6 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
                 r -= dx[i]
                 c -= dy[i]
             elif i < 8:
-                print(i)
                 r -= 2*dx[i%4]
                 c -= 2*dy[i%4]
             else: 
@@ -81,7 +80,6 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
     while len(q):
         r, c = q.popleft()
         if board[r][c] == 'W':
-            print(move_reg[r][c])
             if side: board[-1] = original
             else: board[0] = original
             return reconstruct_path(r,c)
@@ -91,7 +89,6 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
             if valid(nr, nc):
                 if board[nr][nc] == 'X' or board[nr][nc] == 'O':    
                     if(valid(nr+dx[i],nc+dy[i])):
-                        print("Im doing douyblke at", board[nr+dx[i]][nc+dy[i]])
                         q.append((nr+dx[i],nc+dy[i]))
                         move_reg[nr+dx[i]][nc+dy[i]] = i+4
                     else:
