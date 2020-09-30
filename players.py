@@ -7,6 +7,7 @@ Cpawn1 = (3, 140, 252)
 Cpawn2 = (112, 181, 0)
 Cshadow1 = (148,192,209)
 Cshadow2 = (156,173,128)
+Cregshadow = (255, 255, 102)
 class Player:
 	def __init__(self, side, cols, rows):
 		self.x = cols//2
@@ -17,9 +18,9 @@ class Player:
 
 	def get_coord(self, screen, col_w, row_h):
 		X, Y = int(((self.x+1)*col_w)-col_w/2), int(((self.y+1)*row_h)-row_h/2)
-		return (X, Y)
+		return (int(X), int(Y))
 	def get_col_row(self):
-		return (self.x, self.y)
+		return (self.y, self.x)
 
 	def place_item(self, item, f, rows, cols):
 		if f == True:
