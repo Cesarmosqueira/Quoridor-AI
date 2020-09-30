@@ -1,6 +1,6 @@
 from players import *
 import pygame as pg
-from aux_funcs import valid_block
+from aux_funcs import valid_block, win_condition
 import random as rnd
 
 class Board:
@@ -34,7 +34,6 @@ class Board:
 			self.mouse_index = (int(row),int(col))
 	
 	def click(self, screen):
-		print("uclicked")
 		# turn
 		if self.valid_rect and self.mouse_index != self.p1.get_col_row() and self.mouse_index != self.p2.get_col_row():
 			pg.draw.rect(screen,Cblack,(self.valid_rect))
@@ -43,7 +42,7 @@ class Board:
 				self.backend[self.mouse_index[0]+1] = [' ' if x != self.mouse_index[1]+1 and prev[x] != '#' else '#' for x in range(int(self.cols+2))]
 				self.backend[self.mouse_index[0]+1][0] = '#'; self.backend[self.mouse_index[0]+1][-1] = '#'
 			
-			for i in self.backend: print(i)
+			#for i in self.backend: print(i)
 
 	def update_players(self, screen, w, h):
 		# draw pawns
@@ -62,12 +61,19 @@ class Board:
 				if self.backend[j+1][i+1] == '#':
 					pg.draw.rect(screen, Cblack, (i*w, j*h, w, h))
 
+	def move_pawns(self):
+		if self.turn == 1: self.p1.next_move(self.backend)
+		else: self.p2.next_move(self.backend)
+		self.turn *= -1
+
 
 	def update_board(self, screen):
 		w, h, p = self.w, self.h, 1
 		self.draw_board(screen, w, h, p)
 		self.update_players(screen, w, h)
-
+		if win_condition(self.backend) != ' ':
+			print('HA GANADO ALGUIEN CSM')
+			quit()
 		return self.turn
 
 

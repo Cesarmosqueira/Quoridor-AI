@@ -1,5 +1,5 @@
 import pygame as pg
-
+from aux_funcs import get_next_move
 Cwhite = (255, 255, 255)
 Cbrown = (112, 72, 60)
 Cblack = (0, 0, 0)
@@ -9,7 +9,7 @@ Cshadow1 = (148,192,209)
 Cshadow2 = (156,173,128)
 Cregshadow = (255, 255, 102)
 class Player:
-	def __init__(self, side, cols, rows):
+	def __init__(self, side, cols, rows): ## side == True = UP else DOWN 
 		self.x = cols//2
 		self.y = {True: 0, False: rows-1}[side == True]
 		self.side = side
@@ -30,9 +30,13 @@ class Player:
 			self.fences.append([pos, side])
 		# f == false???
 		return
-	def move_to(self, pos, fences): 
-		f = fences + self.fences
-		self.x = pos[0]; self.y = pos[1]
+	def next_move(self, board):  ###BFSBFS
+		print("sending:", self.side, (self.y, self.x))
+		board[self.y+1][self.x+1] = ' '
+		self.y , self.x = get_next_move(board, self.side, (self.y+1, self.x+1))
+		return
+
+		
 	def get_adyacents(self):
 		#### not diagonals
 		return [(self.x-1,self.y),(self.x+1,self.y),(self.x,self.y-1),(self.x,self.y+1)]
