@@ -3,6 +3,8 @@ from collections import deque
 def win_condition(board):
     if 'O' in board[-1]: return 'O'
     elif 'X' in board[1]: return 'X'
+    if 'B' in board[-1]: return 'B'
+    elif 'A' in board[1]: return 'A'
     else: return ' '
 
 def valid_block(board, r, c):
@@ -89,7 +91,6 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
         print("wtf")
         return -1, -1
             
-
     while len(q):
         r, c = q.popleft()
         if board[r][c] == 'W':
@@ -101,7 +102,7 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
         for i in range(4):
             nr, nc = r + dx[i], c + dy[i]
             if valid(nr, nc):
-                if board[nr][nc] == 'X' or board[nr][nc] == 'O':    
+                if board[nr][nc] == 'X' or board[nr][nc] == 'O' or board[nr][nc] == 'B' or board[nr][nc] == 'A':    
                     if(valid(nr+dx[i],nc+dy[i])):
                         print("Im doing douyblke at", board[nr+dx[i]][nc+dy[i]])
                         q.append((nr+dx[i],nc+dy[i]))

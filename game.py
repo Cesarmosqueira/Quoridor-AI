@@ -15,7 +15,7 @@ class Board:
 		self.mouse_rect = pg.Rect(0, 0, 0, 0)
 		self.valid_rect = pg.Rect(0, 0, 0, 0)
 		self.placing_fence = False
-		self.turn = {True:-1,False:1}[rnd.randint(0,1) == 0]            
+		self.turn = rnd.randint(0,4)
 		self.mouse_index = [-1,-1]
 		####matrix#####
 		self.backend = [[{True:'#', False:' '}[x==0 or x ==cols+1] for x in range(cols+2)]]*int(rows+2)
