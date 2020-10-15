@@ -1,9 +1,9 @@
 from collections import deque
 
 def win_condition(board):
-    if 'O' in board[-1]: return 'O'
-    elif 'X' in board[1]: return 'X'
-    else: return ' '
+    if 'O' in board[-2]: return 'O'
+    if 'X' in board[1]: return 'X'
+    return ' '
 
 def valid_block(board, r, c):
     board[r][c] = '#'
@@ -73,6 +73,7 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
             if (r,c) == startpoint:
                 return last
             else: last = [r-1,c-1]
+        print(move_reg)
         print("wtf")
         return -1, -1
             

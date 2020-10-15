@@ -22,7 +22,8 @@ move_reg[start[0]][start[1]] = -2
 q = deque([start])
 
 def valid(row, col):
-	return 0 <= row and row < n and 0 <= col and col < m and board[row][col] != '#' and move_reg[row][col] == -1
+	return 0 <= row and row < n and 0 <= col and col < m \
+               and board[row][col] != '#' and move_reg[row][col] == -1
 
 def bfs():
 	flag = False
