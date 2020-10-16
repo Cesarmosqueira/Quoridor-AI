@@ -7,6 +7,11 @@ def win_condition(board):
 
 def valid_block(board, r, c):
     board[r][c] = '#'
+    for i in board: print(i)
+    if ' ' not in board[1]: 
+        return False
+    if ' ' not in board[-2]: 
+        return False
     dx = [1,-1,0,0]
     dy = [0,0,1,-1]
     n, m = len(board), len(board[0])
@@ -67,9 +72,10 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
                 r -= 2*dx[i%4]
                 c -= 2*dy[i%4]
             else: 
-                i %= 4
-                r -= diagonals[i][0]
-                c -= diagonals[i][1]
+                #      (UR UL DR DL)
+                #  (-1,1), (-1,-1), (1,1), (1,-1)
+                r -= diagonals[i-8][0]
+                c -= diagonals[i-8][1]
             if (r,c) == startpoint:
                 return last
             else: last = [r-1,c-1]
@@ -95,24 +101,24 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
                     else:
                         #      (UR UL DR DL)
                         #  (-1,1), (-1,-1), (1,1), (1,-1)
-                        if dx[i] == 0:
-                            if valid(r+dy[i],c+1):      
-                                q.append((r+dy[i],c+1))  
-                                move_reg[r+dy[i]][c+1] = 8 + (0 if dy[i] == -1 else 2)
-
-                            if valid(r+dy[i],c-1):      
-                                q.append((r+dy[i],c-1))    
-                                move_reg[r+dy[i]][c-1] = 8 + (1 if dy[i] == -1 else 3)
-
+                        print("found a diagonal movement", end = " ")
                         if dy[i] == 0:
-                            if valid(r+1,c+dx[i]): 
-                                q.append((r+1,c+dx[i]))
-                                move_reg[r+1][c+dx[i]] = 8 + (3 if dx[i] == -1 else 2)
+                            if valid(r+dx[i],c+1):      
+                                q.append((r+dx[i],c+1))  
+                                move_reg[r+dx[i]][c+1] = 8 + (0 if dx[i] == -1 else 2)
 
-                            if valid(r-1,c+dx[i]): 
-                                q.append((r-1,c+dx[i]))
-                                move_reg[r-1][c+dx[i]] = 8 + (1 if dx[i] == -1 else 0)
+                            if valid(r+dx[i],c-1):      
+                                q.append((r+dx[i],c-1))    
+                                move_reg[r+dx[i]][c-1] = 8 + (1 if dx[i] == -1 else 3)
 
+                        if dx[i] == 0:
+                            if valid(r+1,c+dy[i]): 
+                                q.append((r+1,c+dy[i]))
+                                move_reg[r+1][c+dy[i]] = 8 + (3 if dy[i] == -1 else 2)
+
+                            if valid(r-1,c+dy[i]): 
+                                q.append((r-1,c+dy[i]))
+                                move_reg[r-1][c+dy[i]] = 8 + (1 if dy[i] == -1 else 0)
                 else:
                     move_reg[nr][nc] = i
                     q.append((nr, nc))
