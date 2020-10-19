@@ -1,3 +1,4 @@
+import time
 import pygame as pg
 import game
 from sys import setrecursionlimit
@@ -12,6 +13,7 @@ turn = board.turn
 aux = 0
 pg.font.init()
 while not over:
+        time.sleep(0.05)
         for event in pg.event.get():
                 if event.type == pg.QUIT:
                         over = True

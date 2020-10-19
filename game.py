@@ -21,10 +21,34 @@ class Board:
                 a = ['#']*(rows+2)
                 self.backend[0] = a; self.backend[-1] = a
 
-
         def mouse_shadow(self, screen, pos):
-            col, row = pos[0]//self.w, pos[1]//self.h
-            p = 2
+            ## ifcursor is in fence poisition
+            p = 0.14
+            if not (self.h*p < pos[1]%self.h and pos[1]%self.h < self.h*(1-p)):
+                col, row = pos[0]//self.w, pos[1]//self.h
+                if col == self.cols-1: col -= 1
+                pg.display.set_caption("Horizontal "+str((col,row)))
+                if row*self.h+(self.h/2) < pos[1]: row+=1 
+                self.mouse_rect = pg.Rect(col*self.w,(row*self.h)-(self.h*p),self.w*2, (self.h*p)*2)
+                self.valid_rect = self.mouse_rect
+                pg.draw.rect(screen, Cregshadow, self.mouse_rect)
+                self.mouse_index = (int(row), int(col))
+                return
+            elif not (self.w*p < pos[0]%self.w and pos[0]%self.w < self.w*(1-p)):
+                col, row = pos[0]//self.w, pos[1]//self.h
+                if row == self.rows-1: row -= 1
+                pg.display.set_caption("Vertical " + str((col,row)))
+                if col*self.w+(self.w/2) < pos[0]: col += 1
+                self.mouse_rect = pg.Rect((col*self.w)-(self.w*p), row*self.h, (self.w*p)*2, self.h*2)
+                self.valid_rect = self.mouse_rect
+                pg.draw.rect(screen, Cregshadow, self.mouse_rect)
+                self.mouse_index = (int(row), int(col))
+                return
+            else:
+                pg.display.set_caption("None")
+                self.mouse_index = (int(-1), int(-1))
+                return
+
             self.mouse_rect = pg.Rect(col*self.w+p, row*self.h+p, self.w-p*2, self.h-p*2)
             self.valid_rect = None
             #### blocks that can't be the same index as any of the players ####
@@ -35,6 +59,10 @@ class Board:
                     self.mouse_index = (int(row),int(col))
             else: self.mouse_index = [-1,-1]
             """
+            
+            pg.draw.rect(screen, Cregshadow, self.mouse_rect)
+            self.valid_rect = self.mouse_rect
+            self.mouse_index = (int(row),int(col))
             
 
 
