@@ -7,7 +7,6 @@ def win_condition(board):
 
 def valid_block(board, r, c):
     board[r][c] = '#'
-    for i in board: print(i)
     if ' ' not in board[1]: 
         return False
     if ' ' not in board[-2]: 

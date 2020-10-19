@@ -23,18 +23,21 @@ class Board:
 
 
         def mouse_shadow(self, screen, pos):
-            if any(x < 0 for x in pos): 
-                self.mouse_index = [-1,-1]
-                return
             col, row = pos[0]//self.w, pos[1]//self.h
             p = 2
             self.mouse_rect = pg.Rect(col*self.w+p, row*self.h+p, self.w-p*2, self.h-p*2)
             self.valid_rect = None
+            #### blocks that can't be the same index as any of the players ####
+            """
             if (row, col) != self.p1.get_col_row() and (row, col) != self.p2.get_col_row():
                     pg.draw.rect(screen, Cregshadow, self.mouse_rect)
                     self.valid_rect = self.mouse_rect
                     self.mouse_index = (int(row),int(col))
             else: self.mouse_index = [-1,-1]
+            """
+            
+
+
         def click(self, screen):
                 # turn
                 if self.valid_rect and self.mouse_index != self.p1.get_col_row() and self.mouse_index != self.p2.get_col_row():
