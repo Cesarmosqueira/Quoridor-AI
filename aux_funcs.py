@@ -39,7 +39,12 @@ def valid_block(board, r, c):
     
     board[r][c] = ' '
     return rooms == 1
-
+####MOVS##### (DX,DY)
+#
+# [(1,0), (-1,0), (0,1), (0,-1)]
+#
+#    R       L      D       U
+#
 def get_next_move(board, side, startpoint): ## side == True = UP else DOWN 
     dx = [1, -1, 0, 0] ## R L D U
     dy = [0, 0, 1, -1]

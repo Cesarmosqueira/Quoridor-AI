@@ -19,6 +19,7 @@ while not over:
                         over = True
                 if event.type == pg.MOUSEBUTTONDOWN:
                         board.click(screen)
+                        
                 pressed = pg.key.get_pressed()
                 if pressed[pg.K_b] and aux == 0:
                         aux = 25
@@ -57,7 +58,7 @@ while not over:
                     print("passing")
                     pass
                 raise Exception("wtf")
-
+        
         turn = board.update_board(screen) ##main func
         board.mouse_shadow(screen, pg.mouse.get_pos())
         pg.display.update()
