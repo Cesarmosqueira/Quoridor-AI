@@ -16,14 +16,14 @@ while not over:
         time.sleep(0.05)
         for event in pg.event.get():
                 if event.type == pg.QUIT:
-                        over = True
+                    over = True
                 if event.type == pg.MOUSEBUTTONDOWN:
-                        board.click(screen)
+                    board.click(screen)
                         
                 pressed = pg.key.get_pressed()
                 if pressed[pg.K_b] and aux == 0:
-                        aux = 25
-                        board.move_pawns()
+                    aux = 25
+                    board.move_pawns()
 
         if turn == 10 or turn == -10:
                 font = pg.font.SysFont("Arial", 32)

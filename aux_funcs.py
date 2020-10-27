@@ -91,8 +91,8 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
     while len(q):
         r, c = q.popleft()
         if board[r][c] == 'W':
-            if side: board[-1] = original
-            else: board[0] = original
+            if side: board[-1] = original.copy()
+            else: board[0] = original.copy()
             return reconstruct_path(r,c)
             break
         for i in range(4):
