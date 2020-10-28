@@ -53,7 +53,6 @@ while not over:
                             turn = board.turn
                             flag = True
                             break
-
                 if flag: 
                     print("passing")
                     pass

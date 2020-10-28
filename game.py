@@ -1,6 +1,7 @@
+from copy import deepcopy
 from players import *
 import pygame as pg
-from aux_funcs import valid_block, win_condition
+from aux_funcs import valid_fence, win_condition
 import random as rnd
 
 class Board:
@@ -17,7 +18,7 @@ class Board:
                 self.mouse_index = [-1,-1]
                 ####matrix#####
                 self.backend = [[{True:['#',[]], False:[' ',[0,1,2,3]]}[x==0 or x ==cols+1] for x in range(cols+2)] for _ in range(rows+2)]
-                a = [('#',[])]*(rows+2)
+                a = [['#',[]]]*(rows+2)
                 self.backend[0] = a.copy(); self.backend[-1] = a.copy()
         def mouse_shadow(self, screen, pos):
             p = 0.14
@@ -56,19 +57,44 @@ class Board:
         def remove_bknd(self, n, pos):
             if n in pos[1]:
                 pos[1].pop(pos[1].index(n))
-            else: return
+                return True
+            else: return False
+
         def click(self, screen): ### click func missing
                 if self.mouse_index == (-1,-1): return 
                 if self.mouse_rect.size[0] > self.mouse_rect.size[1]:
+                    #horizontal
                     row, col = self.mouse_index
                     row+= 1; col+= 1
+                    #backup
+                    abvF, abvS = deepcopy(self.backend[row-1][col])\
+                               , deepcopy(self.backend[row-1][col+1]) 
+                    blwF, blwS = deepcopy(self.backend[row][col]) \
+                               , deepcopy(self.backend[row][col+1])
+                    #remove
                     self.remove_bknd(2, self.backend[row-1][col]); self.remove_bknd(2, self.backend[row-1][col+1])
                     self.remove_bknd(3, self.backend[row][col]); self.remove_bknd(3, self.backend[row][col+1])
+                    if not valid_fence(self.backend):
+                        #UNDO
+                        self.backend[row-1][col], self.backend[row-1][col+1] = abvF, abvS
+                        self.backend[row][col], self.backend[row][col+1] = blwF, blwS
+
                 else:
+                    #vertical
                     row, col = self.mouse_index
                     row+=1; col+=1
+                    #backup
+                    lfA, lfB = deepcopy(self.backend[row][col]), \
+                               deepcopy(self.backend[row+1][col])
+                    rtA, rtB = deepcopy(self.backend[row][col+1]), \
+                               deepcopy(self.backend[row+1][col+1])
+                    #remove
                     self.remove_bknd(0, self.backend[row][col]);   self.remove_bknd(1, self.backend[row][col+1])
                     self.remove_bknd(0, self.backend[row+1][col]); self.remove_bknd(1, self.backend[row+1][col+1])
+                    if not valid_fence(self.backend):
+                        self.backend[row][col], self.backend[row][col+1] = lfA, rtA
+                        self.backend[row+1][col], self.backend[row+1][col+1] = lfB, rtB
+
                 self.mouse_index = (-1,-1) 
                 return
 
@@ -77,8 +103,8 @@ class Board:
                 pg.draw.circle(screen, Cpawn1, self.p1.get_coord(screen, w, h), abs(int(w/2) - 5))
                 pg.draw.circle(screen, Cpawn2, self.p2.get_coord(screen, w, h), abs(int(w/2) - 5))
                 pos1, pos2 = self.p1.get_col_row(), self.p2.get_col_row()
-                self.backend[pos1[0]+1] = [('X',self.backend[pos1[0]+1][i][1]) if i == pos1[1]+1 else self.backend[pos1[0]+1][i] for i in range(len(self.backend[pos1[0]+1]))]
-                self.backend[pos2[0]+1] = [('O',self.backend[pos2[0]+1][i][1]) if i == pos2[1]+1 else self.backend[pos2[0]+1][i] for i in range(len(self.backend[pos2[0]+1]))]
+                self.backend[pos1[0]+1][pos1[1]+1][0] = 'X'
+                self.backend[pos2[0]+1][pos2[1]+1][0] = 'O' 
                 return
         ####MOVS##### (DX,DY)
         # 
@@ -95,17 +121,35 @@ class Board:
                         pg.draw.rect(screen, Cbrown, (i*w+p, j*h+p, w-p*2, h-p*2))
                         if len(self.backend[i+1][j+1][1]) < 4:
                             fences.append([(i+1,j+1), self.backend[i+1][j+1][1]])
+                #RECT(X,Y,W,H)
                 for pos, restr in fences:
-                    pg.draw.rect(screen, Cblack,((pos[1]-1)*w, (pos[0]-1)*h, w, h))
+                    y,x=pos
+                    x -= 1; y-= 1
+                    #block = (pos[1]-1)*w, (pos[0]-1)*h, w, h)
+                    
+                    #top = (x,y,w*2,h*p) 
+                    #R
+                    if   0 not in restr:
+                        pg.draw.rect(screen, Cblack, (((x+1)*w)-w*0.1,(y*h),w*0.15,h))
+                    #L
+                    if 1 not in restr:
+                        pg.draw.rect(screen, Cblack, ((x*w),(y*h),w*0.1,h))
+                    #D
+                    if 2 not in restr:
+                        pg.draw.rect(screen, Cblack, ((x*w),((y+1)*h)-w*0.1,w,h*0.15))
+                    #U
+                    if 3 not in restr: 
+                        pg.draw.rect(screen, Cblack, ((x*w),(y*h),w,h*0.1))
                     
 
         def move_pawns(self):
-                for i in self.backend: print(i)
-                print("\n\n")
-                self.moveflag = True
+                return
+                #for i in self.backend: print(i)
+                #print("\n\n")
+                #self.moveflag = True
                 #if self.turn == 1: self.p1.next_move(self.backend)
                 #else: self.p2.next_move(self.backend)
-                self.turn *= -1
+                #self.turn *= -1
         
         def update_board(self, screen):
                 w, h, p = self.w, self.h, 1
