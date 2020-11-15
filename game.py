@@ -6,6 +6,8 @@ import random as rnd
 
 class Board:
         def __init__(self, rows, cols, screen):
+                pg.font.init()
+                self.font = pg.font.SysFont('Comic Sans MS', 21)
                 self.rows = rows
                 self.cols = cols
                 self.w, self.h = pg.display.get_surface().get_size()
@@ -61,12 +63,14 @@ class Board:
             else: return False
 
         def click(self, screen): ### click func missing
+                for i in self.backend: print(i)
                 if self.mouse_index == (-1,-1): return 
                 if self.mouse_rect.size[0] > self.mouse_rect.size[1]:
                     #horizontal
                     row, col = self.mouse_index
                     row+= 1; col+= 1
                     #backup
+                    print(row,col)
                     abvF, abvS = deepcopy(self.backend[row-1][col])\
                                , deepcopy(self.backend[row-1][col+1]) 
                     blwF, blwS = deepcopy(self.backend[row][col]) \
@@ -119,6 +123,8 @@ class Board:
                     for j in range(self.cols):
                         pg.draw.rect(screen, Cwhite, (i*w,  j*h, w, h))
                         pg.draw.rect(screen, Cbrown, (i*w+p, j*h+p, w-p*2, h-p*2))
+                        if(self.backend[i+1][j+1][1] != []):
+                            screen.blit(self.font.render(str(self.backend[i+1][j+1][1]), False, Cwhite), (p+(i*w),p+(j*h)))    
                         if len(self.backend[i+1][j+1][1]) < 4:
                             fences.append([(i+1,j+1), self.backend[i+1][j+1][1]])
                 #RECT(X,Y,W,H)
