@@ -11,6 +11,7 @@ rows, cols = 9,9
 board = game.Board(rows,cols, screen)
 turn = board.turn
 aux = 0
+info = False
 pg.font.init()
 while not over:
         time.sleep(0.05)
@@ -22,10 +23,17 @@ while not over:
                         
                 pressed = pg.key.get_pressed()
                 if pressed[pg.K_b] and aux == 0:
-                    aux = 25
+                    aux = 4
                     board.move_pawns()
+                if pressed[pg.K_a] and aux == 0:
+                    aux = 4
+                    board.draw_backend()
+                if pressed[pg.K_i] and aux == 0:
+                    aux = 4
+                    info = not info
 
-        if turn == 10 or turn == -10:
+        if turn >= 10:
+                quit()
                 font = pg.font.SysFont("Arial", 32)
                 ts = font.render(str("Ha ganado " + ('el Verde' \
                         if turn == 10 \
@@ -46,8 +54,6 @@ while not over:
                             over = True
                             quit()
                         if pressed[pg.K_r]:
-                            input("u pressed r")
-
                             over = False
                             board = game.Board(rows,cols,screen)
                             turn = board.turn
@@ -56,9 +62,8 @@ while not over:
                 if flag: 
                     print("passing")
                     pass
-                raise Exception("wtf")
         
-        turn = board.update_board(screen) ##main func
+        turn = board.update_board(screen, info) ##main func
         board.mouse_shadow(screen, pg.mouse.get_pos())
         pg.display.update()
         if aux > 0: aux -= 1

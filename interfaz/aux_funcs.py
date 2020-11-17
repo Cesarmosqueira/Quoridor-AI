@@ -1,8 +1,8 @@
 from collections import deque
 from copy import deepcopy
 def win_condition(board):
-    if 'O' in board[-2]: return 'O'
-    if 'X' in board[1]: return 'X'
+    if 'T' in [c[0] for c in board[-2]]: return 'T'
+    if 'B' in [c[0] for c in board[ 1]]: return 'B'
     return ' '
 
 def valid_fence(board):
@@ -43,23 +43,37 @@ def valid_fence(board):
 #
 #    R       L      D       U
 #
+
+        ## 0 = L
+        ## 1 = T
+        ## 2 = R
+        ## 3 = B
 def get_next_move(board, side, startpoint): ## side == True = UP else DOWN 
     dx = [1, -1, 0, 0] ## R L D U
     dy = [0, 0, 1, -1]
                #       (UR UL DR DL)
     diagonals = [(-1,1), (-1,-1), (1,1), (1,-1)]
     n, m = len(board), len(board[0])
-    if side:
+    print(side)
+    if side == 1:
         original = deepcopy(board[-1])
         for i in range(len(board[-1])): board[-1][i][0] = 'W'
-    else: 
+    elif side == 3: 
         original = deepcopy(board[0])
         for i in range(len(board[0])): board[0][i][0] = 'W'
-
+    elif side == 0: #left
+        original = []
+        for i in range(len(board)):
+            original.append(deepcopy(board[i][-1]))
+            board[i][-1][0] = 'W'
+    elif side == 2: #right
+        original = []
+        for i in range(len(board)):
+            original.append(deepcopy(board[i][0]))
+            board[i][0][0] = 'W'
     q = deque([startpoint])
     move_reg = [[-1 for y in range(m)] for x in range(n)] 
     
-
     def valid(row, col):
         return 0 <= row and row < n and 0 <= col and col < m and move_reg[row][col] == -1 and \
                 board[row][col][0] != '#'
@@ -82,23 +96,32 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
             if (r,c) == startpoint:
                 return last
             else: last = [r-1,c-1]
+        
         print("wtf")
+        for i in move_reg: print(i)
         return -1, -1
     
     while len(q):
         r, c = q.popleft()
         if board[r][c][0] == 'W':
-            for i in board: print(i)
-            if side: board[-1] = original
-            else: board[0] = original
+            ## 0 = L
+            ## 1 = T
+            ## 2 = R
+            ## 3 = B
+            if side == 1: board[-1] = original
+            elif side == 3: board[0] = original
+            elif side == 0: 
+                for i in range(len(board)):
+                    board[i][-1] = original[i]
+            elif side == 2: #right
+                for i in range(len(board)):
+                    board[i][0] = original[i]
+            print(side)
             return reconstruct_path(r,c)
-            break
-        print("Posible moves from ", (r,c))
         for i in board[r][c][1]:
-            print("\t- ",(dy[i],dx[i]))
             nr, nc = r + dy[i], c + dx[i]
             if valid(nr, nc):
-                if board[nr][nc][0] == 'X' or board[nr][nc][0] == 'O':    
+                if board[nr][nc][0] != ' ':    
                     if(valid(nr+dy[i],nc+dx[i])):
                         q.append((nr+dy[i],nc+dx[i]))
                         move_reg[nr+dy[i]][nc+dx[i]] = i+4
@@ -106,8 +129,6 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
                         pass
                         #      (UR UL DR DL)
                         #  (-1,1), (-1,-1), (1,1), (1,-1)
-                        """
-                        print("found a diagonal movement", end = " ")
                         if dy[i] == 0:
                             if valid(r+dx[i],c+1):      
                                 q.append((r+dx[i],c+1))  
@@ -125,12 +146,11 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
                             if valid(r-1,c+dy[i]): 
                                 q.append((r-1,c+dy[i]))
                                 move_reg[r-1][c+dy[i]] = 8 + (1 if dy[i] == -1 else 0)
-                        """
                 else:
                     move_reg[nr][nc] = i
                     q.append((nr, nc))
        
-
+    for i in board: print(i)
     print("WTF")
     return -1,-1
 
