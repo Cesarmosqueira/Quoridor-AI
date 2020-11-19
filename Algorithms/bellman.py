@@ -1,3 +1,4 @@
+
 n, m = map(int, input().split())
 ed = [] # lista de aristas
 for i in range(m):
