@@ -3,16 +3,18 @@ import pygame as pg
 import game
 from sys import setrecursionlimit
 setrecursionlimit(10**4)
+rows = int(input("Ingrese el numero de Filas "))
+cols = int(input("Ingrese el numero de Columnas "))
 W, H = 800, 800
 screen = pg.display.set_mode((W, H))
 pg.display.set_caption('game')
 over = False
-rows, cols = 9,9
 board = game.Board(rows,cols, screen)
 turn = board.turn
 aux = 0
 info = False
 pg.font.init()
+
 while not over:
         time.sleep(0.05)
         for event in pg.event.get():
