@@ -1,7 +1,7 @@
 # Quoridor-AI
 ## Trabajo Final de Complejidad Algoritmica de la Universidad UPC
 #### Los Collabs se encuentran en la carpeta algoritmos/informes.
-#### La cantidad de filas y columnas pueden ser modificadas en 'pyjuego.py' linea 9.
+#### La cantidad de filas y columnas pueden ser modificadas en 'pyjuego.py' linea 10.
 #### Para ejecutar el juego en interfaz se tiene que correr el archivo pyjuego.py
 #### Integrantes: 
 * Francesco Bassino Riglos (u201816649)
