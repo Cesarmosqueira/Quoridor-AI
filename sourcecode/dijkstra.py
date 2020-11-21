@@ -1,4 +1,5 @@
 from collections import deque
+import heapq as hp
 from copy import deepcopy
 def win_condition(board):
     if 'T' in [c[0] for c in board[-2]]: return 'T'
@@ -101,55 +102,14 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
         for i in move_reg: print(i)
         return -1, -1
     
-    while len(q):
-        r, c = q.popleft()
-        if board[r][c][0] == 'W':
-            ## 0 = L
-            ## 1 = T
-            ## 2 = R
-            ## 3 = B
-            if side == 1: board[-1] = original
-            elif side == 3: board[0] = original
-            elif side == 0: 
-                for i in range(len(board)):
-                    board[i][-1] = original[i]
-            elif side == 2: #right
-                for i in range(len(board)):
-                    board[i][0] = original[i]
-            print(side)
-            return reconstruct_path(r,c)
-        for i in board[r][c][1]:
-            nr, nc = r + dy[i], c + dx[i]
-            if valid(nr, nc):
-                if board[nr][nc][0] != ' ':    
-                    if(valid(nr+dy[i],nc+dx[i])):
-                        q.append((nr+dy[i],nc+dx[i]))
-                        move_reg[nr+dy[i]][nc+dx[i]] = i+4
-                    else:
-                        pass
-                        #      (UR UL DR DL)
-                        #  (-1,1), (-1,-1), (1,1), (1,-1)
-                        if dy[i] == 0:
-                            if valid(r+dx[i],c+1):      
-                                q.append((r+dx[i],c+1))  
-                                move_reg[r+dx[i]][c+1] = 8 + (0 if dx[i] == -1 else 2)
+    vs = [[] for _ in range(n)]
+    for src, dst, 1 in 
+    for i in range(len(board)):
+        for e, 1 in vs[i]:
 
-                            if valid(r+dx[i],c-1):      
-                                q.append((r+dx[i],c-1))    
-                                move_reg[r+dx[i]][c-1] = 8 + (1 if dx[i] == -1 else 3)
 
-                        if dx[i] == 0:
-                            if valid(r+1,c+dy[i]): 
-                                q.append((r+1,c+dy[i]))
-                                move_reg[r+1][c+dy[i]] = 8 + (3 if dy[i] == -1 else 2)
 
-                            if valid(r-1,c+dy[i]): 
-                                q.append((r-1,c+dy[i]))
-                                move_reg[r-1][c+dy[i]] = 8 + (1 if dy[i] == -1 else 0)
-                else:
-                    move_reg[nr][nc] = i
-                    q.append((nr, nc))
-       
+
     for i in board: print(i)
     print("---")
     return -1,-1

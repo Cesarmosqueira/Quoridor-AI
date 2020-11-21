@@ -1,19 +1,24 @@
 import time
 import pygame as pg
 import game
-from sys import setrecursionlimit
-setrecursionlimit(10**4)
+#from sys import setrecursionlimit
+#setrecursionlimit(10**4)
+
 rows = int(input("Ingrese el numero de Filas "))
 cols = int(input("Ingrese el numero de Columnas "))
-W, H = 800, 800
-screen = pg.display.set_mode((W, H))
-pg.display.set_caption('game')
-over = False
-board = game.Board(rows,cols, screen)
-turn = board.turn
-aux = 0
-info = False
-pg.font.init()
+if (rows > 9) or (cols > 9) or (rows == cols):
+    W, H = 800, 800
+    screen = pg.display.set_mode((W, H))
+    pg.display.set_caption('game')
+    over = False
+    board = game.Board(rows,cols, screen)
+    turn = board.turn
+    aux = 0
+    info = False
+    pg.font.init()
+else:
+    print ("Numero de filas o columnas no validas")
+    
 
 while not over:
         time.sleep(0.05)

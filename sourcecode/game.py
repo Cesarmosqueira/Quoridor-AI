@@ -143,7 +143,7 @@ class Board:
             
             #top = (x,y,w*2,h*p) 
             #R
-            if   0 not in restr:
+            if 0 not in restr:
                 pg.draw.rect(screen, Cblack, (((x+1)*w)-w*0.1,(y*h),w*0.15,h))
             #L
             if 1 not in restr:
