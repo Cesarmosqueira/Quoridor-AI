@@ -1,10 +1,14 @@
 import time
 import pygame as pg
 import game
-from sys import setrecursionlimit
+from sys import setrecursionlimit, argv
 setrecursionlimit(10**4)
-rows = int(input("Ingrese el numero de Filas "))
-cols = int(input("Ingrese el numero de Columnas "))
+if len(argv) == 1:
+    rows = 10
+    cols = 10
+elif len(argv) > 3:
+    raise Exception("Solo se reciben 2 argumentos: [filas] [columnas]")
+else: rows, cols = int(argv[1]), int(argv[2])
 W, H = 800, 800
 screen = pg.display.set_mode((W, H))
 pg.display.set_caption('game')

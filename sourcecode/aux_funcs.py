@@ -51,7 +51,8 @@ def valid_fence(board):
 def get_next_move(board, side, startpoint): ## side == True = UP else DOWN 
     dx = [1, -1, 0, 0] ## R L D U
     dy = [0, 0, 1, -1]
-               #       (UR UL DR DL)
+              #       (UR UL DR DL)
+              #  (-1,1), (-1,-1), (1,1), (1,-1)
     diagonals = [(-1,1), (-1,-1), (1,1), (1,-1)]
     n, m = len(board), len(board[0])
     print(side)
@@ -121,38 +122,39 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
         for i in board[r][c][1]:
             nr, nc = r + dy[i], c + dx[i]
             if valid(nr, nc):
-                if board[nr][nc][0] != ' ':    
-                    if(valid(nr+dy[i],nc+dx[i])):
+                if board[nr][nc][0] in 'L T R B'.split():    
+                    if(valid(nr+dy[i],nc+dx[i]) and i in board[nr][nc][1]):
                         q.append((nr+dy[i],nc+dx[i]))
                         move_reg[nr+dy[i]][nc+dx[i]] = i+4
                     else:
-                        pass
                         #      (UR UL DR DL)
                         #  (-1,1), (-1,-1), (1,1), (1,-1)
-                        if dy[i] == 0:
-                            if valid(r+dx[i],c+1):      
-                                q.append((r+dx[i],c+1))  
-                                move_reg[r+dx[i]][c+1] = 8 + (0 if dx[i] == -1 else 2)
+                        print("Collision from ", (r, c))
+                        print("Going ", (dy[i], dx[i]))
+                        if dy[i] == 0: ##r o l
+                            if valid(r+1, c+dx[i]) and 2 in board[r][c+dx[i]][1]: #d
+                                q.append((r+1,c+dx[i]))
+                                move_reg[r+1][c+dx[i]] = 8 + (3 if dx[i] == -1 else 2) 
+                            if valid(r-1, c+dx[i]) and 3 in board[r][c+dx[i]][1]: #u
+                                q.append((r-1,c+dx[i]))
+                                move_reg[r-1][c+dx[i]] = 8 + (1 if dx[i] == -1 else 0) 
+                        
+                        if dx[i] == 0: ##u o d
+                            if valid(r+dy[i], c-1) and 1 in board[r+dy[i]][c][1]: #l
+                                q.append((r+dy[i], c-1)) 
+                                move_reg[r+dy[i]][c-1] = 8 + (1 if dy[i] == -1 else 3)
 
-                            if valid(r+dx[i],c-1):      
-                                q.append((r+dx[i],c-1))    
-                                move_reg[r+dx[i]][c-1] = 8 + (1 if dx[i] == -1 else 3)
-
-                        if dx[i] == 0:
-                            if valid(r+1,c+dy[i]): 
-                                q.append((r+1,c+dy[i]))
-                                move_reg[r+1][c+dy[i]] = 8 + (3 if dy[i] == -1 else 2)
-
-                            if valid(r-1,c+dy[i]): 
-                                q.append((r-1,c+dy[i]))
-                                move_reg[r-1][c+dy[i]] = 8 + (1 if dy[i] == -1 else 0)
+                            if valid(r+dy[i], c+1) and 0 in board[r+dy[i]][c][1]: #r
+                                q.append((r+dy[i], c+1)) 
+                                move_reg[r+dy[i]][c+1] = 8 + (0 if dy[i] == -1 else 2)
+                        for asd in move_reg: print(asd)
+                        print()
                 else:
                     move_reg[nr][nc] = i
                     q.append((nr, nc))
        
-    for i in board: print(i)
     print("WTF")
-    return -1,-1
+    return 0, 0
 
 
 
