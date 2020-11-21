@@ -58,6 +58,7 @@ class Board:
         #
         #    R       L      D       U
         #
+        print("IM going to print", (self.mouse_index))
         if self.mouse_index == (-1,-1): return 
         if self.mouse_rect.size[0] > self.mouse_rect.size[1]:
             #horizontal
@@ -159,7 +160,7 @@ class Board:
     def move_pawns(self):
         print("\n")
         self.moveflag = True
-        self.pawns[self.turn].next_move(self.backend)
+        self.pawns[self.turn].next_move(self.backend, self.mouse_rect, self.mouse_index)
         self.turn = (self.turn+1)%4
         print(self.turn)
     

@@ -1,6 +1,7 @@
 import time
 import pygame as pg
 import game
+<<<<<<< HEAD
 #from sys import setrecursionlimit
 #setrecursionlimit(10**4)
 
@@ -19,6 +20,25 @@ if (rows > 9) or (cols > 9) or (rows == cols):
 else:
     print ("Numero de filas o columnas no validas")
     
+=======
+from sys import setrecursionlimit, argv
+setrecursionlimit(10**4)
+if len(argv) == 1:
+    rows = 10
+    cols = 10
+elif len(argv) > 3:
+    raise Exception("Solo se reciben 2 argumentos: [filas] [columnas]")
+else: rows, cols = int(argv[1]), int(argv[2])
+W, H = 800, 800
+screen = pg.display.set_mode((W, H))
+pg.display.set_caption('game')
+over = False
+board = game.Board(rows,cols, screen)
+turn = board.turn
+aux = 0
+info = False
+pg.font.init()
+>>>>>>> a8b52756a9e86efadb36f674535be455c3ac13d1
 
 while not over:
         time.sleep(0.05)

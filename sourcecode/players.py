@@ -1,5 +1,7 @@
 import pygame as pg
-from aux_funcs import get_next_move
+from copy import deepcopy
+from aux_funcs import get_next_move, valid_fence
+from random import randint
 Cwhite = (255, 255, 255)
 Cbrown = (112, 72, 60)
 Cblack = (0, 0, 0)
@@ -46,21 +48,61 @@ class Player:
         #X, Y = int(((self.x+1)*col_w)-col_w/2), int(((self.y+1)*row_h)-row_h/2)
         return (int(X), int(Y))
 
-    def place_item(self, item, f, rows, cols):
-        if f == True:
-                side = {True: 'H', False: 'V'}[item.w > item.h]
-                pos = ((item.left//cols)+{True: 0, False: 1}
-                           [side == 'H'], (item.top//rows)+{True: 0, False: 1}[side == 'V'])
-                self.fences.append([pos, side])
-        # f == false???
-        return
-    def next_move(self, board):  ###BFSBFS
-        print("Moving ", self.side)
+    def remove_bknd(self, n, pos):
+        if n in pos[1]:
+            pos[1].pop(pos[1].index(n))
+            return True
+        else: return False
+
+    def next_move(self, board, rec, pos):  ###BFSBFS
+        self.place_fence(board, True, 3,3)
         board[self.y+1][self.x+1][0] = ' '
         self.y , self.x = get_next_move(board, self.side, (self.y+1, self.x+1))
         return
 
-            
+    def place_fence(self, board, side, row, col):
+        if side: #horizontal
+            #horizontal
+            print("Recieved: ", (row,col))
+            print(f"Modifying row = {row}; col = {col}")
+            #backup
+            SLL = deepcopy(board[row][col]) 
+            SLR = deepcopy(board[row][col+1]) 
+            STL = deepcopy(board[row-1][col]) 
+            STR = deepcopy(board[row-1][col+1]) 
+            #remove
+            self.remove_bknd(3,board[row][col])
+            self.remove_bknd(3,board[row][col+1])
+            self.remove_bknd(2,board[row-1][col])
+            self.remove_bknd(2,board[row-1][col+1])
+            if not valid_fence(board):
+                #UNDO
+                board[row][col] = SLL 
+                board[row][col+1] = SLR
+                board[row-1][col] = STL
+                board[row-1][col+1] = STR
+        else:
+            #vertical
+            col -= 1
+            print("Recieved: ", (row,col))
+            print(f"Modifying row = {row}; col = {col}")
+            #backup
+            STL = deepcopy(board[row][col])
+            STR = deepcopy(board[row][col+1])
+            SBL = deepcopy(board[row+1][col])
+            SBR = deepcopy(board[row+1][col+1])
+            #remove
+            self.remove_bknd(0,board[row][col])
+            self.remove_bknd(1,board[row][col+1])
+            self.remove_bknd(0,board[row+1][col])
+            self.remove_bknd(1,board[row+1][col+1])
+            if not valid_fence(board):
+                board[row][col]    = STL
+                board[row][col+1]  = STR 
+                board[row+1][col]  = SBL 
+                board[row+1][col+1] = SBR
+
+
     def get_adyacents(self):
         #### not diagonals
         return [(self.x-1,self.y),(self.x+1,self.y),(self.x,self.y-1),(self.x,self.y+1)]
