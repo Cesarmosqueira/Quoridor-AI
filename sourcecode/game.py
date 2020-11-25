@@ -160,9 +160,8 @@ class Board:
     def move_pawns(self):
         print("\n")
         self.moveflag = True
-        self.pawns[self.turn].next_move(self.backend, self.mouse_rect, self.mouse_index)
+        self.pawns[self.turn].next_move(self.backend, self.pawns)
         self.turn = (self.turn+1)%4
-        print(self.turn)
     
     def update_board(self, screen, info):
         pg.display.set_caption(f"Mouse at {self.mouse_index}\tTurn of player {self.turn}")
@@ -175,4 +174,45 @@ class Board:
             return self.turn*10
         return self.turn
 
+    def place_fence(self, board, side, row, col):
+            if side: #horizontal
+                #horizontal
+                print("Recieved: ", (row,col))
+                print(f"Modifying row = {row}; col = {col}")
+                #backup
+                SLL = deepcopy(board[row][col]) 
+                SLR = deepcopy(board[row][col+1]) 
+                STL = deepcopy(board[row-1][col]) 
+                STR = deepcopy(board[row-1][col+1]) 
+                #remove
+                self.remove_bknd(3,board[row][col])
+                self.remove_bknd(3,board[row][col+1])
+                self.remove_bknd(2,board[row-1][col])
+                self.remove_bknd(2,board[row-1][col+1])
+                if not valid_fence(board):
+                    #UNDO
+                    board[row][col] = SLL 
+                    board[row][col+1] = SLR
+                    board[row-1][col] = STL
+                    board[row-1][col+1] = STR
+            else:
+                #vertical
+                col -= 1
+                print("Recieved: ", (row,col))
+                print(f"Modifying row = {row}; col = {col}")
+                #backup
+                STL = deepcopy(board[row][col])
+                STR = deepcopy(board[row][col+1])
+                SBL = deepcopy(board[row+1][col])
+                SBR = deepcopy(board[row+1][col+1])
+                #remove
+                self.remove_bknd(0,board[row][col])
+                self.remove_bknd(1,board[row][col+1])
+                self.remove_bknd(0,board[row+1][col])
+                self.remove_bknd(1,board[row+1][col+1])
+                if not valid_fence(board):
+                    board[row][col]    = STL
+                    board[row][col+1]  = STR 
+                    board[row+1][col]  = SBL 
+                    board[row+1][col+1] = SBR
 

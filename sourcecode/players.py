@@ -1,6 +1,6 @@
 import pygame as pg
 from copy import deepcopy
-from aux_funcs import get_next_move, valid_fence
+from aux_funcs import get_next_move, valid_fence, should_move
 from random import randint
 Cwhite = (255, 255, 255)
 Cbrown = (112, 72, 60)
@@ -54,10 +54,17 @@ class Player:
             return True
         else: return False
 
-    def next_move(self, board, rec, pos):  ###BFSBFS
-        self.place_fence(board, True, 3,3)
-        board[self.y+1][self.x+1][0] = ' '
-        self.y , self.x = get_next_move(board, self.side, (self.y+1, self.x+1))
+    def next_move(self, board, players):  ###BFSBFS
+        #self.place_fence(board, True, 3,3)
+        #self.unplace_fence(board, True, 3,3)
+        sm = should_move(board, players, self.side)
+        if sm[0]:
+            board[self.y+1][self.x+1][0] = ' '
+            self.y , self.x = get_next_move(board, self.side, (self.y+1, self.x+1), False)
+        else: #place fence
+            print("Distances: ", end = "")
+            print(sm[1])
+
         return
 
     def place_fence(self, board, side, row, col):
@@ -102,6 +109,25 @@ class Player:
                 board[row+1][col]  = SBL 
                 board[row+1][col+1] = SBR
 
+    def unplace_fence(self,board,side,row,col):
+        if side:
+            SLL = board[row][col][1] 
+            SLR = board[row][col+1][1] 
+            STL = board[row-1][col][1] 
+            STR = board[row-1][col+1][1]
+            if 3 not in SLL: SLL.append(0)
+            if 3 not in SLR: SLR.append(1)
+            if 2 not in STL: STL.append(0)
+            if 2 not in STR: STR.append(1)            
+        else:
+            STL = board[row][col][1]    
+            STR = board[row][col+1][1]  
+            SBL = board[row+1][col][1]  
+            SBR = board[row+1][col+1][1]
+            if 0 not in STL: STL.append(0)
+            if 1 not in STR: STR.append(1)
+            if 0 not in SBL: SBL.append(0)
+            if 1 not in SBR: SBR.append(1)            
 
     def get_adyacents(self):
         #### not diagonals

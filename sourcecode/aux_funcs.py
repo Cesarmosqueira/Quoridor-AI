@@ -48,14 +48,13 @@ def valid_fence(board):
         ## 1 = T
         ## 2 = R
         ## 3 = B
-def get_next_move(board, side, startpoint): ## side == True = UP else DOWN 
+def get_next_move(board, side, startpoint, D): ## side == True = UP else DOWN 
     dx = [1, -1, 0, 0] ## R L D U
     dy = [0, 0, 1, -1]
               #       (UR UL DR DL)
               #  (-1,1), (-1,-1), (1,1), (1,-1)
     diagonals = [(-1,1), (-1,-1), (1,1), (1,-1)]
     n, m = len(board), len(board[0])
-    print(side)
     if side == 1:
         original = deepcopy(board[-1])
         for i in range(len(board[-1])): board[-1][i][0] = 'W'
@@ -81,7 +80,9 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
 
     def reconstruct_path(r, c):
         last = [r,c]
+        distcount = 0
         while move_reg[r][c] >= 0:
+            distcount += 1
             i = move_reg[r][c] 
             if i < 4:
                 r -= dy[i]
@@ -95,11 +96,10 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
                 r -= diagonals[i-8][0]
                 c -= diagonals[i-8][1]
             if (r,c) == startpoint:
-                return last
+                return distcount if D else last 
             else: last = [r-1,c-1]
         
         print("---")
-        for i in move_reg: print(i)
         return -1, -1
     
     while len(q):
@@ -117,7 +117,6 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
             elif side == 2: #right
                 for i in range(len(board)):
                     board[i][0] = original[i]
-            print(side)
             return reconstruct_path(r,c)
         for i in board[r][c][1]:
             nr, nc = r + dy[i], c + dx[i]
@@ -129,8 +128,6 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
                     else:
                         #      (UR UL DR DL)
                         #  (-1,1), (-1,-1), (1,1), (1,-1)
-                        print("Collision from ", (r, c))
-                        print("Going ", (dy[i], dx[i]))
                         if dy[i] == 0: ##r o l
                             if valid(r+1, c+dx[i]) and 2 in board[r][c+dx[i]][1]: #d
                                 q.append((r+1,c+dx[i]))
@@ -147,8 +144,6 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
                             if valid(r+dy[i], c+1) and 0 in board[r+dy[i]][c][1]: #r
                                 q.append((r+dy[i], c+1)) 
                                 move_reg[r+dy[i]][c+1] = 8 + (0 if dy[i] == -1 else 2)
-                        for asd in move_reg: print(asd)
-                        print()
                 else:
                     move_reg[nr][nc] = i
                     q.append((nr, nc))
@@ -156,6 +151,42 @@ def get_next_move(board, side, startpoint): ## side == True = UP else DOWN
     for i in board: print(i)
     print("---")
     return -1,-1
+
+
+def should_move(board, players, cp):
+    dist = [-1 for _ in range(4)]
+    for p in players:
+        dist[p.side] = get_next_move(board, p.side, (p.y+1, p.x+1), True)
+    return dist[cp] == max(dist), dist
+
+
+def minimax(board, turn, p):
+    
+    p[turn].place_fence(board, 
+    minimax(board,(turn + 1)%4, players) 
+    return
+    
+        
+
+def where_to_place(board, side, players):
+    return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
