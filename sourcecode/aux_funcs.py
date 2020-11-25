@@ -184,12 +184,12 @@ def make_and_do_choice(orgboard, p, cp):
         for i in range(1, len(board)-1):
             for j in range(1, len(board[0])-1):
                 VS = HS = float('-inf')
-                if p[cp].can_place(board, cp, i, j):
+                if p[cp].can_place(board,False, i, j):
                     ## place vertical
                     p[cp].place_fence(board,False, i, j)    
                     VS = get_score(d, get_status(board,p), cp) 
                     p[cp].unplace_fence(board,False, i, j)    
-                if p[cp].can_place(board, cp, i, j):
+                if p[cp].can_place(board, True, i, j):
                     ## place horizontal
                     p[cp].place_fence(board,True, i, j)    
                     HS = get_score(d, get_status(board,p), cp) 
