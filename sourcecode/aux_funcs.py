@@ -1,8 +1,12 @@
 from collections import deque
 from copy import deepcopy
+from sys import setrecursionlimit
+setrecursionlimit(10**5)
 def win_condition(board):
     if 'T' in [c[0] for c in board[-2]]: return 'T'
     if 'B' in [c[0] for c in board[ 1]]: return 'B'
+    if 'R' in [row[1][0]  for row in board]: return 'R'
+    if 'L' in [row[-2][0]  for row in board]: return 'R'
     return ' '
 
 def valid_fence(board):
@@ -31,11 +35,9 @@ def valid_fence(board):
             if (board[i][j][0] != '#') and (not vis[i][j]):
                 rooms += 1
                 if rooms > 1: 
-                    print("dfs found more than one room") 
                     return False
                 dfs(i, j)
 
-    print("dfs found ", rooms, "rooms") 
     return rooms == 1
 ####MOVS##### (DX,DY)
 #
@@ -153,11 +155,11 @@ def get_next_move(board, side, startpoint, D): ## side == True = UP else DOWN
     return -1,-1
 
 
-def should_move(board, players, cp):
+def get_status(board, players):
     dist = [-1 for _ in range(4)]
     for p in players:
         dist[p.side] = get_next_move(board, p.side, (p.y+1, p.x+1), True)
-    return dist[cp] == max(dist), dist
+    return dist
 
 def get_score(distances1, distances2, player):
     ac, it = 0, 0
@@ -172,51 +174,46 @@ representation = { 0: 'L',
                    1: 'T',
                    2: 'R',
                    3: 'B'}   
+fences = []
+def make_and_do_choice(orgboard, p, cp):
+    d = get_status(orgboard, p)
+    if(max(d) == d[cp] or d.count(max(d)) > 0):
+        board = deepcopy(orgboard)
+        fence_to_place = [True, 0,0]
+        best_score = float('-inf')
+        for i in range(1, len(board)-1):
+            for j in range(1, len(board[0])-1):
+                VS = HS = float('-inf')
+                if p[cp].can_place(board, cp, i, j):
+                    ## place vertical
+                    p[cp].place_fence(board,False, i, j)    
+                    VS = get_score(d, get_status(board,p), cp) 
+                    p[cp].unplace_fence(board,False, i, j)    
+                if p[cp].can_place(board, cp, i, j):
+                    ## place horizontal
+                    p[cp].place_fence(board,True, i, j)    
+                    HS = get_score(d, get_status(board,p), cp) 
+                    p[cp].unplace_fence(board,True, i, j)    
+                n_score = max(VS, HS)
+                if best_score < n_score:
+                    fence_to_place = [n_score == HS, i, j]
+                    best_score = n_score
+        s, r, c = fence_to_place
+        if p[cp].can_place(orgboard, s, r, c) and [s,r,c] not in fences:
+            p[cp].place_fence(orgboard,s,r,c) 
+            fences.append([s,r,c])
+            print(fences)
+            print(f"Placing fence {'Horizontal' if fence_to_place[0] else 'Vertical'} at {fence_to_place[2], fence_to_place[1]}")
+        else:
+            print("moving")
+            orgboard[p[cp].y+1][p[cp].x+1][0] = ' '
+            p[cp].y , p[cp].x = get_next_move(orgboard, p[cp].side, (p[cp].y+1, p[cp].x+1),False)
+    else:
+        print("moving")
+        orgboard[p[cp].y+1][p[cp].x+1][0] = ' '
+        p[cp].y , p[cp].x = get_next_move(orgboard, p[cp].side, (p[cp].y+1, p[cp].x+1), False)
 
-def minimax(board, turn, p, depth):
-    nt = (turn+1)%4
-    if nt == 0: depth -= 1
-    if depth <= 0:
-        return should_move(board, p, turn)[1]
     
-
-    
-        
-
-def where_to_place(board, p, turn, distances, depth): # turn = side
-    best_score = float('-inf')
-    best_move = [0,0]
-    d = distances
-    for i in range(1, len(board)-1):
-        for j in range(1, len(board[0])-1):
-            ## h
-            p[turn].place_fence(board, True, i, j)
-            H = minimax(board, (turn+1)%4, p, depth)    
-            p[turn].unplace_fence(board, True, i, j)
-            ## v
-            p[turn].place_fence(board, True, i, j)
-            V = minimax(board, (turn+1)%4, p, depth)    
-            p[turn].unplace_fence(board, True, i, j)
-            new_score = max(get_score(d, H), get_score(d, V)) 
-            if new_score > best_score:
-                best_score = new_score
-                best_move = [i,j]
-
-    return best_move
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

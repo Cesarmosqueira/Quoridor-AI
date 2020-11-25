@@ -58,15 +58,12 @@ class Board:
         #
         #    R       L      D       U
         #
-        print("IM going to print", (self.mouse_index))
         if self.mouse_index == (-1,-1): return 
         if self.mouse_rect.size[0] > self.mouse_rect.size[1]:
             #horizontal
             row, col = self.mouse_index
             row +=1 
             col += 1
-            print("Recieved: ", (self.mouse_index))
-            print(f"Modifying row = {row}; col = {col}")
             #backup
             SLL = deepcopy(self.backend[row][col]) 
             SLR = deepcopy(self.backend[row][col+1]) 
@@ -88,8 +85,6 @@ class Board:
             #vertical
             row, col = self.mouse_index
             row += 1
-            print("Recieved: ", (self.mouse_index))
-            print(f"Modifying row = {row}; col = {col}")
             #backup
             STL = deepcopy(self.backend[row][col])
             STR = deepcopy(self.backend[row][col+1])
@@ -158,7 +153,6 @@ class Board:
             
 
     def move_pawns(self):
-        print("\n")
         self.moveflag = True
         self.pawns[self.turn].next_move(self.backend, self.pawns)
         self.turn = (self.turn+1)%4
@@ -173,46 +167,4 @@ class Board:
             print(winner)
             return self.turn*10
         return self.turn
-
-    def place_fence(self, board, side, row, col):
-            if side: #horizontal
-                #horizontal
-                print("Recieved: ", (row,col))
-                print(f"Modifying row = {row}; col = {col}")
-                #backup
-                SLL = deepcopy(board[row][col]) 
-                SLR = deepcopy(board[row][col+1]) 
-                STL = deepcopy(board[row-1][col]) 
-                STR = deepcopy(board[row-1][col+1]) 
-                #remove
-                self.remove_bknd(3,board[row][col])
-                self.remove_bknd(3,board[row][col+1])
-                self.remove_bknd(2,board[row-1][col])
-                self.remove_bknd(2,board[row-1][col+1])
-                if not valid_fence(board):
-                    #UNDO
-                    board[row][col] = SLL 
-                    board[row][col+1] = SLR
-                    board[row-1][col] = STL
-                    board[row-1][col+1] = STR
-            else:
-                #vertical
-                col -= 1
-                print("Recieved: ", (row,col))
-                print(f"Modifying row = {row}; col = {col}")
-                #backup
-                STL = deepcopy(board[row][col])
-                STR = deepcopy(board[row][col+1])
-                SBL = deepcopy(board[row+1][col])
-                SBR = deepcopy(board[row+1][col+1])
-                #remove
-                self.remove_bknd(0,board[row][col])
-                self.remove_bknd(1,board[row][col+1])
-                self.remove_bknd(0,board[row+1][col])
-                self.remove_bknd(1,board[row+1][col+1])
-                if not valid_fence(board):
-                    board[row][col]    = STL
-                    board[row][col+1]  = STR 
-                    board[row+1][col]  = SBL 
-                    board[row+1][col+1] = SBR
 

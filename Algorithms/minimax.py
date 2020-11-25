@@ -103,7 +103,6 @@ player = [-1,-1]
 turn = bool(getrandbits(1)) ### turn 1 ai turn -1 player
 
 while check_winner(board)[0]:
-    print()
     if turn: 
         print("Player's turn:", end = " ")
         player = [int(x) for x in input().split()]

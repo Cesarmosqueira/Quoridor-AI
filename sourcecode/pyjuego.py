@@ -16,6 +16,8 @@ else:
     rows, cols = int(argv[1]), int(argv[2])
     if not(rows == cols and rows % 2 != 0):
         raise Exception("Las filas y columnas deben ser iguales e imapres")
+time_lim = 20
+time_count = time_lim
 W, H = 800, 800
 screen = pg.display.set_mode((W, H))
 pg.display.set_caption('game')
@@ -26,15 +28,16 @@ aux = 0
 info = False
 pg.font.init()
 
-
 while not over:
-        time.sleep(0.05)
+        time_count -= 1
         for event in pg.event.get():
                 if event.type == pg.QUIT:
                     over = True
                 if event.type == pg.MOUSEBUTTONDOWN:
                     board.click(screen)
-                        
+                if time_count <= 0:
+                    board.move_pawns()
+                    time_count = time_lim
                 pressed = pg.key.get_pressed()
                 if pressed[pg.K_b] and aux == 0:
                     aux = 4

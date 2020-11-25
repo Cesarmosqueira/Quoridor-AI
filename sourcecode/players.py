@@ -1,6 +1,6 @@
 import pygame as pg
 from copy import deepcopy
-from aux_funcs import get_next_move, valid_fence, should_move
+from aux_funcs import get_next_move, valid_fence, make_and_do_choice
 from random import randint
 Cwhite = (255, 255, 255)
 Cbrown = (112, 72, 60)
@@ -55,23 +55,12 @@ class Player:
         else: return False
 
     def next_move(self, board, players):  ###BFSBFS
-        #self.place_fence(board, True, 3,3)
-        #self.unplace_fence(board, True, 3,3)
-        sm = should_move(board, players, self.side)
-        if sm[0]:
-            board[self.y+1][self.x+1][0] = ' '
-            self.y , self.x = get_next_move(board, self.side, (self.y+1, self.x+1), False)
-        else: #place fence
-            print("Distances: ", end = "")
-            print(sm[1])
-
+        make_and_do_choice(board, players, self.side)
         return
 
     def place_fence(self, board, side, row, col):
         if side: #horizontal
             #horizontal
-            print("Recieved: ", (row,col))
-            print(f"Modifying row = {row}; col = {col}")
             #backup
             SLL = deepcopy(board[row][col]) 
             SLR = deepcopy(board[row][col+1]) 
@@ -91,8 +80,6 @@ class Player:
         else:
             #vertical
             col -= 1
-            print("Recieved: ", (row,col))
-            print(f"Modifying row = {row}; col = {col}")
             #backup
             STL = deepcopy(board[row][col])
             STR = deepcopy(board[row][col+1])
@@ -115,11 +102,12 @@ class Player:
             SLR = board[row][col+1][1] 
             STL = board[row-1][col][1] 
             STR = board[row-1][col+1][1]
-            if 3 not in SLL: SLL.append(0)
-            if 3 not in SLR: SLR.append(1)
-            if 2 not in STL: STL.append(0)
-            if 2 not in STR: STR.append(1)            
+            if 3 not in SLL: SLL.append(3)
+            if 3 not in SLR: SLR.append(3)
+            if 2 not in STL: STL.append(2)
+            if 2 not in STR: STR.append(2)            
         else:
+            col -= 1
             STL = board[row][col][1]    
             STR = board[row][col+1][1]  
             SBL = board[row+1][col][1]  
@@ -128,6 +116,27 @@ class Player:
             if 1 not in STR: STR.append(1)
             if 0 not in SBL: SBL.append(0)
             if 1 not in SBR: SBR.append(1)            
+    def can_place(self, board, side, row, col):
+        if side:
+            SLL = board[row][col][1] 
+            SLR = board[row][col+1][1] 
+            STL = board[row-1][col][1] 
+            STR = board[row-1][col+1][1]
+            if 3 not in SLL: return False 
+            if 3 not in SLR: return False
+            if 2 not in STL: return False
+            if 2 not in STR: return False            
+        else:
+            col -= 1
+            STL = board[row][col][1]    
+            STR = board[row][col+1][1]  
+            SBL = board[row+1][col][1]  
+            SBR = board[row+1][col+1][1]
+            if 0 not in STL: return False
+            if 1 not in STR: return False
+            if 0 not in SBL: return False
+            if 1 not in SBR: return False            
+        return True
 
     def get_adyacents(self):
         #### not diagonals
