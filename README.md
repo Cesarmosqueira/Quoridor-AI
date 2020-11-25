@@ -2,6 +2,7 @@
 ## Trabajo Final de Complejidad Algoritmica de la Universidad UPC
 #### Los Collabs se encuentran en la carpeta algoritmos/informes.
 #### Para ejecutar el juego en interfaz se tiene que correr el archivo pyjuego.py
+#### Para que el juego funcione tiene que tener el mouse en la ventana moviendose constantemente
 #### Integrantes: 
 * Francesco Bassino Riglos (u201816649)
 * César Manuel Mosqueira Chacón (u201910750)
