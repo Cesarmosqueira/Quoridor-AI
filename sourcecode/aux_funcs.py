@@ -159,17 +159,50 @@ def should_move(board, players, cp):
         dist[p.side] = get_next_move(board, p.side, (p.y+1, p.x+1), True)
     return dist[cp] == max(dist), dist
 
+def get_score(distances1, distances2, player):
+    ac, it = 0, 0
+    for i1, i2 in zip(distances1, distances2):
+        if it != player:
+            ac += i1 - i2
+        it += 1
+    return ac - (distances1[player]-distances2[player])
 
-def minimax(board, turn, p):
+
+representation = { 0: 'L',
+                   1: 'T',
+                   2: 'R',
+                   3: 'B'}   
+
+def minimax(board, turn, p, depth):
+    nt = (turn+1)%4
+    if nt == 0: depth -= 1
+    if depth <= 0:
+        return should_move(board, p, turn)[1]
     
-    p[turn].place_fence(board, 
-    minimax(board,(turn + 1)%4, players) 
-    return
+
     
         
 
-def where_to_place(board, side, players):
-    return
+def where_to_place(board, p, turn, distances, depth): # turn = side
+    best_score = float('-inf')
+    best_move = [0,0]
+    d = distances
+    for i in range(1, len(board)-1):
+        for j in range(1, len(board[0])-1):
+            ## h
+            p[turn].place_fence(board, True, i, j)
+            H = minimax(board, (turn+1)%4, p, depth)    
+            p[turn].unplace_fence(board, True, i, j)
+            ## v
+            p[turn].place_fence(board, True, i, j)
+            V = minimax(board, (turn+1)%4, p, depth)    
+            p[turn].unplace_fence(board, True, i, j)
+            new_score = max(get_score(d, H), get_score(d, V)) 
+            if new_score > best_score:
+                best_score = new_score
+                best_move = [i,j]
+
+    return best_move
 
 
 
